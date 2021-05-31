@@ -1264,6 +1264,10 @@ _lp_kubernetes_context() {
     local kubernetes_context
     kubernetes_context=$(kubectl config current-context 2>/dev/null) || return 1
 
+    if [[ -n "$LP_DELIMITER_KUBECONTEXT_STRIP_PREFIX" ]]; then
+        kubernetes_context="${kubernetes_context#*${LP_DELIMITER_KUBECONTEXT_STRIP_PREFIX}}"
+    fi
+
     if [[ -n "$LP_DELIMITER_KUBECONTEXT" ]]; then
         kubernetes_context="${kubernetes_context%%${LP_DELIMITER_KUBECONTEXT}*}"
     fi
