@@ -414,7 +414,7 @@ lp_activate() {
         for value in "${precmd_functions[@]}"; do
             [[ "$value" != "__lp_set_prompt" ]] && new_precmd_functions+=("$value")
         done
-        precmd_functions=("${new_precmd_functions[@]}")
+        precmd_functions=(${new_precmd_functions[@]}+"${new_precmd_functions[@]}"})
         unset new_precmd_functions
 
         # Now repeat for preexec (not precmd) functions
@@ -423,7 +423,7 @@ lp_activate() {
             [[ "$value" != "__lp_runtime_before" ]] &&
             [[ "$value" != "__lp_print_title_command" ]] && new_preexec_functions+=("$value")
         done
-        preexec_functions=("${new_preexec_functions[@]}")
+        preexec_functions=(${new_preexec_functions[@]}+"${new_preexec_functions[@]}"})
         unset new_preexec_functions
 
         complete -F __lp_theme_bash_complete lp_theme
@@ -3127,7 +3127,7 @@ prompt_off() {
             for value in "${precmd_functions[@]}"; do
                 [[ "$value" != __lp_* ]] && new_precmd_functions+=("$value")
             done
-            precmd_functions=("${new_precmd_functions[@]}")
+            precmd_functions=(${new_precmd_functions[@]}+"${new_precmd_functions[@]}"})
             unset new_precmd_functions
 
             # Now repeat for preexec (not precmd) functions
@@ -3135,7 +3135,7 @@ prompt_off() {
             for value in "${preexec_functions[@]}"; do
                 [[ "$value" != __lp_* ]] && new_preexec_functions+=("$value")
             done
-            preexec_functions=("${new_preexec_functions[@]}")
+            preexec_functions=(${new_preexec_functions[@]}+"${new_preexec_functions[@]}"})
             unset new_preexec_functions
         fi
     else # zsh
