@@ -3136,7 +3136,7 @@ prompt_off() {
             # (This is "remove the specified value(s) from the array", which bash does not make easy.)
             new_precmd_functions=()
             for value in "${precmd_functions[@]}"; do
-                [[ "$value" =~ __lp_ ]] && new_precmd_functions+=("$value")
+                [[ "$value" != __lp_* ]] && new_precmd_functions+=("$value")
             done
             precmd_functions=("${new_precmd_functions[@]}")
             unset new_precmd_functions
@@ -3144,7 +3144,7 @@ prompt_off() {
             # Now repeat for preexec (not precmd) functions
             new_preexec_functions=()
             for value in "${preexec_functions[@]}"; do
-                [[ "$value" =~ __lp_ ]] && new_preexec_functions+=("$value")
+                [[ "$value" != __lp_* ]] && new_preexec_functions+=("$value")
             done
             preexec_functions=("${new_preexec_functions[@]}")
             unset new_preexec_functions
