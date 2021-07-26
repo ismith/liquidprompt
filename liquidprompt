@@ -3008,6 +3008,11 @@ __lp_set_prompt() {
     fi
 }
 
+# If we want this done with a timer for debug purposes, and if we're using bash-preexec, then this must be a function
+__lp_debug_timed_lp_set_prompt() {
+    time __lp_set_prompt
+}
+
 __lp_before_command() {
     # For debugging
     #printf 'XXX %s\n' "$BASH_COMMAND"
@@ -3092,7 +3097,7 @@ prompt_on() {
             (( LP_DEBUG_TIME )) && PROMPT_COMMAND="time $PROMPT_COMMAND" || true
         else
             precmd_functions+=(__lp_set_prompt)
-            (( LP_DEBUG_TIME )) && precmd_functions+=("time __lp_set_prompt") || true
+            (( LP_DEBUG_TIME )) && precmd_functions+=(__lp_debug_timed_lp_set_prompt) || true
         fi
     else # zsh
         [[ -n "${_LP_ZSH_HOOK-}" ]] && add-zsh-hook -d precmd "$_LP_ZSH_HOOK"
