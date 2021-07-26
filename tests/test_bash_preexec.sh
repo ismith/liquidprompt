@@ -1,14 +1,13 @@
 #!/bin/bash
-# shellcheck disable=SC1090,SC1091
+# shellcheck disable=SC1090,SC1091,SC2031,SC2030
 
-# Note: we do _not_ call __lp_set_prompt directly in this file, as we do
+# Note: we do not call __lp_set_prompt directly in this file, as we do
 # elsewhere; the idea is to check that it is properly integrated with
 # bash-preexec.sh.
 
 function setup_bash_preexec() {
   source "/home/ismith/.bash-preexec.sh"
-  # Not sure why this is necessary here, when my .bashrc doesn't need it, b
-
+  # Not sure why this is necessary here, when my .bashrc doesn't need it, but
   # ... PROMPT_COMMAND has the __bp_install_string if I don't.
   __bp_install
 }
@@ -30,6 +29,8 @@ function setup() {
     setup_liquidprompt
 }
 
+### Begin actual test functions. (Above this line are setup helpers.)
+
 function test_bash_preexec_with_LP_RUNTIME {
   (
     setup
@@ -48,6 +49,25 @@ function test_bash_preexec_with_LP_ERR {
     false # should get "1" in prompt
     $PROMPT_COMMAND
     assertContains "$PS1" "${LP_COLOR_ERR}1${NO_COL}"
+  )
+}
+
+function test_bash_preexec_with_prompt_off {
+  (
+    setup
+
+    # This just checks that we did in fact get liquidprompt turned on.
+    export LP_ENABLE_ERROR=1
+    false # should get "1" in prompt
+    $PROMPT_COMMAND
+    assertContains "$PS1" "${LP_COLOR_ERR}1${NO_COL}"
+
+    prompt_off
+    false
+    $PROMPT_COMMAND
+    echo "PC: $PROMPT_COMMAND"
+    echo "PS1: $PS1"
+    assertNotContains "$PS1" "${LP_COLOR_ERR}1${NO_COL}"
   )
 }
 
