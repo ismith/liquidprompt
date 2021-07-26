@@ -24,12 +24,6 @@
 # Do not exit if '--no-activate' flag was passed, as it overrides this check
 [ "x${-##*i}" = "x$-" ] || [ -z "${TERM-}" ] || [ "x${TERM-}" = xdumb ] && [ "x${1-}" != "x--no-activate" ] && return
 
-__lp_use_bash_preexec() {
-    # If https://github.com/rcaloras/bash-preexec is present, we can (and should, because it interferes with
-    # PROMPT_COMMAND and DEBUG) use the zsh-hook like behavior it provides.
-    [[ "${__bp_imported:-}" == "defined" ]]
-}
-
 if test -n "${BASH_VERSION-}"; then
     # Check for recent enough version of bash.
     if (( ${BASH_VERSINFO[0]:-0} < 3 || ( ${BASH_VERSINFO[0]:-0} == 3 && ${BASH_VERSINFO[1]:-0} < 2 ) )); then
@@ -83,6 +77,12 @@ else
     echo "liquidprompt: shell not supported" >&2
     return
 fi
+
+__lp_use_bash_preexec() {
+    # If https://github.com/rcaloras/bash-preexec is present, we can (and should, because it interferes with
+    # PROMPT_COMMAND and DEBUG) use the zsh-hook like behavior it provides.
+    [[ "${__bp_imported:-}" == "defined" ]]
+}
 
 ###############
 # OS specific #
