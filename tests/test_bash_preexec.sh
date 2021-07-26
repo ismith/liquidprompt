@@ -5,6 +5,11 @@
 # elsewhere; the idea is to check that it is properly integrated with
 # bash-preexec.sh.
 
+if [[ "$SHELL" != *bash ]]; then
+  echo "$0 is irrelevant for non-bash shells, and this is ${SHELL}"
+  exit 0
+fi
+
 function setup_bash_preexec() {
   source "/home/ismith/.bash-preexec.sh"
   # Not sure why this is necessary here, when my .bashrc doesn't need it, but
