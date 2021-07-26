@@ -3105,7 +3105,6 @@ prompt_on() {
             # grep for whole-line matches (-x) separated by \0 instead of \n (--null-data).
             if ! (printf '%s\0' "${precmd_functions[@]}" | grep --null-data -xq -e "__lp_set_prompt" -e "__lp_debug_timed_lp_set_prompt"); then
             if (( LP_DEBUG_TIME )); then
-                # TODO: this is not a function, fix this.
                 precmd_functions+=(__lp_debug_timed_lp_set_prompt) || true
             else
                 precmd_functions+=(__lp_set_prompt)
