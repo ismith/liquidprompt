@@ -41,9 +41,32 @@ function test_bash_preexec_with_LP_RUNTIME {
   )
 }
 
+# Check it works with bash_preexec off
+function test_no_bash_preexec_with_LP_RUNTIME {
+  (
+    setup_liquidprompt
+
+    sleep 3 # should get "3s" in prompt
+    $PROMPT_COMMAND
+    assertContains "$PS1" "${LP_COLOR_RUNTIME}3s${NO_COL}"
+  )
+}
+
 function test_bash_preexec_with_LP_ERR {
   (
     setup
+
+    export LP_ENABLE_ERROR=1
+    false # should get "1" in prompt
+    $PROMPT_COMMAND
+    assertContains "$PS1" "${LP_COLOR_ERR}1${NO_COL}"
+  )
+}
+
+# Check it works with bash_preexec off
+function test_no_bash_preexec_with_LP_ERR {
+  (
+    setup_liquidprompt
 
     export LP_ENABLE_ERROR=1
     false # should get "1" in prompt
