@@ -54,7 +54,33 @@ function test_bash_preexec_with_LP_ERR {
 
 function test_bash_preexec_with_prompt_off {
   (
-    setup
+    setup_bash_preexec
+
+    local -a precmd_functions_before_liquid_prompt
+    local -a precmd_functions_before_liquid_prompt
+    precmd_functions_before_liquidprompt=(${precmd_functions[@]+"${precmd_functions[@]}"} )
+    preexec_functions_before_liquidprompt=(${preexec_functions[@]+"${preexec_functions[@]}"} )
+
+    # This function checks that liquidprompt returns precmd_functions and
+    # preexec_functions to their original state after prompt_off is run - it'd
+    # be "too easy" if their original state was empty, let's make sure they're
+    # not.
+    assertNotEquals "0" "${#precmd_functions_before_liquidprompt[@]}"
+    assertNotEquals "0" "${#preexec_functions_before_liquidprompt[@]}"
+    assertNotEquals "0" "${#precmd_functions[@]}"
+    assertNotEquals "0" "${#preexec_functions[@]}"
+
+    # Check we copied them correctly
+    assertEquals "${precmd_functions[@]}" "${precmd_functions_before_liquidprompt[@]}"
+    assertEquals "${preexec_functions[@]}" "${preexec_functions_before_liquidprompt[@]}"
+
+    setup_liquidprompt
+    # We expect liquidprompt to add new entries to precmd_functions and
+    # preexec_functions, so the arrays should no longer be equal.
+    assertNotEquals "${precmd_functions[@]}" "${precmd_functions_before_liquidprompt[@]}"
+    assertNotEquals "${preexec_functions[@]}" "${preexec_functions_before_liquidprompt[@]}"
+    precmd_functions_after_liquidprompt=(${precmd_functions[@]+"${precmd_functions[@]}"} )
+    preexec_functions_after_liquidprompt=(${preexec_functions[@]+"${preexec_functions[@]}"} )
 
     # This just checks that we did in fact get liquidprompt turned on.
     export LP_ENABLE_ERROR=1
@@ -62,12 +88,24 @@ function test_bash_preexec_with_prompt_off {
     $PROMPT_COMMAND
     assertContains "$PS1" "${LP_COLOR_ERR}1${NO_COL}"
 
+    # Here's the function we're actually here to test.
     prompt_off
+
+    # With prompt off, not only should we not have a "1" in prompt, it should
+    # just be back to plain old "$ "
     false
     $PROMPT_COMMAND
-    echo "PC: $PROMPT_COMMAND"
-    echo "PS1: $PS1"
     assertNotContains "$PS1" "${LP_COLOR_ERR}1${NO_COL}"
+    assertEquals "$PS1" "$ "
+
+    # And, having run prompt_off, precmd_functions and preexec_functions should
+    # be back to their original values.
+    assertEquals \
+      "${precmd_functions_before_liquidprompt[@]}" \
+      "${precmd_functions[@]}"
+    assertEquals \
+      "${preexec_functions_before_liquidprompt[@]}" \
+      "${preexec_functions[@]}"
   )
 }
 
