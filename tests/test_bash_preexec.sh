@@ -10,8 +10,17 @@ if [[ "$SHELL" != *bash ]]; then
   exit 0
 fi
 
+# Install bash-preexec.sh
+(
+  echo "Installing bash-preexec.sh in $(pwd)..."
+  bash_preexec_version=0.4.1
+  curl -O https://raw.githubusercontent.com/rcaloras/bash-preexec/$bash_preexec_version/bash-preexec.sh
+  echo "Installed bash-preexec.sh in $(pwd)..."
+)
+
 function setup_bash_preexec() {
-  source "/home/ismith/.bash-preexec.sh"
+  source ./bash-preexec.sh
+
   # Not sure why this is necessary here, when my .bashrc doesn't need it, but
   # ... PROMPT_COMMAND has the __bp_install_string if I don't.
   __bp_install
