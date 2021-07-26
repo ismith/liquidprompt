@@ -146,5 +146,4 @@ function test_bash_preexec_with_prompt_off {
   )
 }
 
-
 . ./shunit2
