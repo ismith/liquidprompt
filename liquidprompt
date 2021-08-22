@@ -93,7 +93,7 @@ fi
 __lp_use_bash_preexec() {
     # If https://github.com/rcaloras/bash-preexec is present, we can (and should, because it interferes with
     # PROMPT_COMMAND and DEBUG) use the zsh-hook like behavior it provides.
-    [[ "${__bp_imported:-}" == "defined" ]]
+    [[ "${__bp_imported-}" == "defined" ]]
 }
 
 ###############
