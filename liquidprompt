@@ -3108,8 +3108,20 @@ prompt_on() {
             PROMPT_COMMAND=__lp_set_prompt
             (( LP_DEBUG_TIME )) && PROMPT_COMMAND="time $PROMPT_COMMAND" || true
         else
-            precmd_functions+=(__lp_set_prompt)
-            (( LP_DEBUG_TIME )) && precmd_functions+=(__lp_debug_timed_lp_set_prompt) || true
+            # We do not want __lp_set_prompt to show up twice in precmd_functions; if it does, then LP_ENABLE_ERROR
+            # breaks because even if the first call of __lp_set_prompt has $? != 0, the second one will have $? == 0.
+            # (Same for __lp_debug_timed_lp_set_prompt.)
+
+            # This conditional is intended to check  $precmd_functions for the presence of '__lp_set_prompt' or
+            # '__lp_debug_timed_lp_set_prompt' so they get added at most once; each entry is null-separated and then we
+            # grep for whole-line matches (-x) separated by \0 instead of \n (--null-data).
+            if ! (printf '%s\0' "${precmd_functions[@]}" | grep --null-data -xq -e "__lp_set_prompt" -e "__lp_debug_timed_lp_set_prompt"); then
+            if (( LP_DEBUG_TIME )); then
+                precmd_functions+=(__lp_debug_timed_lp_set_prompt) || true
+            else
+                precmd_functions+=(__lp_set_prompt)
+            fi
+            fi
         fi
     else # zsh
         [[ -n "${_LP_ZSH_HOOK-}" ]] && add-zsh-hook -d precmd "$_LP_ZSH_HOOK"
