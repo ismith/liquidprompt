@@ -3021,11 +3021,6 @@ __lp_set_prompt() {
     fi
 }
 
-# If we want this done with a timer for debug purposes, and if we're using bash-preexec, then this must be a function
-__lp_debug_timed_lp_set_prompt() {
-    time __lp_set_prompt
-}
-
 __lp_before_command() {
     # For debugging
     #printf 'XXX %s\n' "$BASH_COMMAND"
@@ -3117,6 +3112,9 @@ prompt_on() {
             # grep for whole-line matches (-x) separated by \0 instead of \n (--null-data).
             if ! (printf '%s\0' "${precmd_functions[@]}" | grep --null-data -xq -e "__lp_set_prompt" -e "__lp_debug_timed_lp_set_prompt"); then
             if (( LP_DEBUG_TIME )); then
+                __lp_debug_timed_lp_set_prompt() {
+                    time __lp_set_prompt
+                }
                 precmd_functions+=(__lp_debug_timed_lp_set_prompt) || true
             else
                 precmd_functions+=(__lp_set_prompt)
