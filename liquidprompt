@@ -424,7 +424,7 @@ lp_activate() {
         # may have changed
         # (This is "remove the specified value(s) from the array", which bash does not make easy.)
         new_precmd_functions=()
-        for value in "${precmd_functions[@]}"; do
+        for value in ${precmd_functions[@]+"${precmd_functions[@]}"}; do
             [[ "$value" != "__lp_set_prompt" ]] && new_precmd_functions+=("$value")
         done
         precmd_functions=(${new_precmd_functions[@]+"${new_precmd_functions[@]}"})
@@ -432,7 +432,7 @@ lp_activate() {
 
         # Now repeat for preexec (not precmd) functions
         new_preexec_functions=()
-        for value in "${preexec_functions[@]}"; do
+        for value in ${preexec_functions[@]+"${preexec_functions[@]}"}; do
             [[ "$value" != "__lp_runtime_before" ]] &&
             [[ "$value" != "__lp_print_title_command" ]] && new_preexec_functions+=("$value")
         done
@@ -3150,7 +3150,7 @@ prompt_off() {
             # remove all the __lp_ hooks we installed
             # (This is "remove the specified value(s) from the array", which bash does not make easy.)
             new_precmd_functions=()
-            for value in "${precmd_functions[@]}"; do
+            for value in ${precmd_functions[@]+"${precmd_functions[@]}"}; do
                 [[ "$value" != __lp_* ]] && new_precmd_functions+=("$value")
             done
             precmd_functions=(${new_precmd_functions[@]+"${new_precmd_functions[@]}"})
@@ -3158,7 +3158,7 @@ prompt_off() {
 
             # Now repeat for preexec (not precmd) functions
             new_preexec_functions=()
-            for value in "${preexec_functions[@]}"; do
+            for value in ${preexec_functions[@]+"${preexec_functions[@]}"}; do
                 [[ "$value" != __lp_* ]] && new_preexec_functions+=("$value")
             done
             preexec_functions=(${new_preexec_functions[@]+"${new_preexec_functions[@]}"})
